@@ -51,7 +51,9 @@ class GLEMTrainer():
         else:
             self.log(f'\n <<<<<<<<<< LM-Pretraining >>>>>>>>>>')
             available_gpus = self.cf.gpus.split(',')
+            print("Available GPUs: ", available_gpus)
             gpus = ','.join(available_gpus[:min(self.cf.prt_lm.max_n_gpus, len(available_gpus))])
+            print("prefix 1", self.cf.lm_tr_prefix)
             cmd = f'{self.cf.lm_tr_prefix} -m{self.cf.lm_model} {self.cf.prt_lm.cmd} --save_folder={prt_emi.lm.folder} -d{self.cf.dataset} -g{gpus} {f"-wLM_Prt_{self.cf.dataset[:4]}" if self.cf.wandb_on else ""} --em_iter=-1'
             uf.run_command_parallel(cmd, gpus, self.log)
             th.cuda.empty_cache()
