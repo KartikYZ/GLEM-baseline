@@ -11,8 +11,9 @@ from utils.data.preprocess import *
 from utils.modules.early_stopper import EarlyStopping
 from time import time
 
-LOG_FREQ = 10
+from profile_latency import timer
 
+LOG_FREQ = 10
 
 class GNNTrainer():
     def __init__(self, cf: GNNConfig):
@@ -62,6 +63,7 @@ class GNNTrainer():
             {"y_pred": pred.argmax(dim=-1, keepdim=True), "y_true": labels.view(-1, 1)}
         )["acc"]
 
+    @timer
     def _forward(self, *args):
         logits = self.model(*args)  # small-graph
         if self.is_ind:
@@ -72,6 +74,7 @@ class GNNTrainer():
         else:
             return logits
 
+    @timer
     def _train(self):
         # ! Shared
         self.model.train()

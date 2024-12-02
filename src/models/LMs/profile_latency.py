@@ -5,7 +5,7 @@ import logging
 
 LOG_DIR='/scratch/ns_ksinha45/graphllms/GLEM-baseline/logs'
 
-logging.basicConfig(level=logging.DEBUG, filename=f'{LOG_DIR}/latency.log')
+logging.basicConfig(level=logging.DEBUG, filename=f'{LOG_DIR}/lm_latency.log')
 logger = logging.getLogger(__name__)
 
 class LatencyTrainer(Trainer):

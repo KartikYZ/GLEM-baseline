@@ -12,6 +12,11 @@ from utils.data.preprocess import *
 
 LOG_FREQ = 1
 
+from profile_latency import timer
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG, filename=f'./logs/gnn_latency.log')
 
 class BatchGNNTrainer():
     def __init__(self, cf: GNNConfig):
@@ -70,6 +75,7 @@ class BatchGNNTrainer():
             {"y_pred": pred.argmax(dim=-1, keepdim=True), "y_true": labels.view(-1, 1)}
         )["acc"]
 
+    @timer
     def _train(self, epoch, sampler):
         # ! Local: Has to be convert to subgraph ids.
         import numpy as np
@@ -94,6 +100,9 @@ class BatchGNNTrainer():
         )
 
         for step, (input_nodes, seeds, blocks) in enumerate(dataloader):
+            
+            start_time = time.perf_counter()
+            
             # copy block to gpu
             blocks = [blk.int().to(self.cf.device) for blk in blocks]
             # Load the input features as well as output labels
@@ -117,6 +126,11 @@ class BatchGNNTrainer():
                     epoch, step, loss.item(), train_acc, gpu_mem_alloc))
                 last_loss.append(loss.item())
                 last_train_acc.append(train_acc)
+                
+            end_time = time.perf_counter()
+            run_time = end_time - start_time
+            print(f"Function _train took {run_time:.4f} seconds to complete")
+            logger.debug(f"Function _train took {run_time:.4f} seconds to complete")
 
         return np.mean(last_loss), np.mean(last_train_acc)
 

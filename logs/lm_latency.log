@@ -1,0 +1,36 @@
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /microsoft/deberta-base/resolve/main/config.json HTTP/1.1" 200 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /microsoft/deberta-base/resolve/main/config.json HTTP/1.1" 200 0
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): huggingface.co:443
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /microsoft/deberta-base/resolve/main/pytorch_model.bin HTTP/1.1" 302 0
+DEBUG:urllib3.connectionpool:https://huggingface.co:443 "HEAD /microsoft/deberta-base/resolve/main/pytorch_model.bin HTTP/1.1" 302 0
+INFO:torch.distributed.distributed_c10d:Added key: store_based_barrier_key:1 to store for rank: 0
+INFO:torch.distributed.distributed_c10d:Added key: store_based_barrier_key:1 to store for rank: 1
+INFO:torch.distributed.distributed_c10d:Rank 1: Completed store-based barrier for key:store_based_barrier_key:1 with 2 nodes.
+INFO:torch.distributed.distributed_c10d:Rank 0: Completed store-based barrier for key:store_based_barrier_key:1 with 2 nodes.
+DEBUG:profile_latency:Iteration latency: 1.1853 seconds
+DEBUG:profile_latency:Iteration latency: 1.1361 seconds
+DEBUG:profile_latency:Iteration latency: 0.3291 seconds
+DEBUG:profile_latency:Iteration latency: 0.3283 seconds
+DEBUG:profile_latency:Iteration latency: 0.3298 seconds
+DEBUG:profile_latency:Iteration latency: 0.3298 seconds
+DEBUG:profile_latency:Iteration latency: 0.3314 seconds
+DEBUG:profile_latency:Iteration latency: 0.3295 seconds
+DEBUG:profile_latency:Iteration latency: 0.3336 seconds
+DEBUG:profile_latency:Iteration latency: 0.3316 seconds
+DEBUG:profile_latency:Iteration latency: 0.3292 seconds
+DEBUG:profile_latency:Iteration latency: 0.3287 seconds
+DEBUG:profile_latency:Iteration latency: 0.3293 seconds
+DEBUG:profile_latency:Iteration latency: 0.3291 seconds
+DEBUG:profile_latency:Iteration latency: 0.3291 seconds
+DEBUG:profile_latency:Iteration latency: 0.3287 seconds
+DEBUG:profile_latency:Iteration latency: 0.3278 seconds
+DEBUG:profile_latency:Iteration latency: 0.3277 seconds
+DEBUG:profile_latency:Iteration latency: 0.3282 seconds
+DEBUG:profile_latency:Iteration latency: 0.3275 seconds
+DEBUG:profile_latency:Iteration latency: 0.3297 seconds
+DEBUG:profile_latency:Iteration latency: 0.3292 seconds
+DEBUG:profile_latency:Iteration latency: 0.3296 seconds
+DEBUG:profile_latency:Iteration latency: 0.3282 seconds
