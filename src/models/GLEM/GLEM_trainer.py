@@ -1,14 +1,13 @@
-from os.path import exists as f_exists
+import torch as th
+from torch.profiler import profile, record_function, ProfilerActivity
 import utils.function as uf
 from datasets import load_metric
-
 from models.LMs.lm_utils import *
 from models.GNNs.gnn_utils import *
 from models.GLEM.GLEM_utils import *
-import torch as th
+from os.path import exists as f_exists
 
 metric = load_metric('src/utils/function/hf_accuracy.py')
-
 
 class GLEMTrainer():
     """Convert textural graph to text list"""
@@ -16,8 +15,9 @@ class GLEMTrainer():
     def __init__(self, cf):
         from transformers import logging
         # logging.set_verbosity_warning()
-        logging.set_verbosity_error()
-
+        # logging.set_verbosity_error()
+        logging.set_verbosity_debug()
+        
         self.cf = cf
         self.logger = cf.logger
         self.log = cf.logger.log
@@ -51,9 +51,7 @@ class GLEMTrainer():
         else:
             self.log(f'\n <<<<<<<<<< LM-Pretraining >>>>>>>>>>')
             available_gpus = self.cf.gpus.split(',')
-            print("Available GPUs: ", available_gpus)
             gpus = ','.join(available_gpus[:min(self.cf.prt_lm.max_n_gpus, len(available_gpus))])
-            print("prefix 1", self.cf.lm_tr_prefix)
             cmd = f'{self.cf.lm_tr_prefix} -m{self.cf.lm_model} {self.cf.prt_lm.cmd} --save_folder={prt_emi.lm.folder} -d{self.cf.dataset} -g{gpus} {f"-wLM_Prt_{self.cf.dataset[:4]}" if self.cf.wandb_on else ""} --em_iter=-1'
             uf.run_command_parallel(cmd, gpus, self.log)
             th.cuda.empty_cache()
@@ -97,27 +95,34 @@ class GLEMTrainer():
     def _inf_lm(self):
         cmd = self._get_cmds(self.cf.lm_inf_prefix, self.cf.lm, LMConfig().parser) + ' -I'
         # No need to train, therefore no parallel running needed
-
         uf.run_command_parallel(cmd, self.cf.gpus, self.log)
         th.cuda.empty_cache()
 
     def _inference(self):
         # ! LM training
         self._em_iter_log('LM Train')
-        cmd = self._get_cmds(self.cf.lm_tr_prefix, self.cf.lm, LMConfig().parser) + ' -A'
-        uf.run_command_parallel(cmd, self.cf.gpus, self.log)
+        with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA], profile_memory=True) as prof:
+            with record_function("LM Train"):
+                cmd = self._get_cmds(self.cf.lm_tr_prefix, self.cf.lm, LMConfig().parser) + ' -A'
+                uf.run_command_parallel(cmd, self.cf.gpus, self.log)
+        prof.export_chrome_trace(f"lm_train_iter_{self.em_iter}.json")  # Save profiling data
         th.cuda.empty_cache()
 
         # ! LM Inference
-        # Not last phase: Cir-train Inference
         self._em_iter_log('LM Inference')
-        self._inf_lm()
+        with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA], profile_memory=True) as prof:
+            with record_function("LM Inference"):
+                self._inf_lm()
+        prof.export_chrome_trace(f"lm_inference_iter_{self.em_iter}.json")  # Save profiling data
 
     def _maximization(self):
         # ! GNN training
         self._em_iter_log('GNN')
-        cmd = self._get_cmds(self.cf.gnn_tr_prefix, self.cf.gnn, GNNConfig().parser) + ' -A'
-        self.run_gnn_cmd(cmd)
+        with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA], profile_memory=True) as prof:
+            with record_function("GNN Train"):
+                cmd = self._get_cmds(self.cf.gnn_tr_prefix, self.cf.gnn, GNNConfig().parser) + ' -A'
+                self.run_gnn_cmd(cmd)
+        prof.export_chrome_trace(f"gnn_train_iter_{self.em_iter}.json")  # Save profiling data
 
     def _final_report(self):
         def get_best_by_val_acc(res_list, prefix):
@@ -137,11 +142,16 @@ class GLEMTrainer():
     def glem_train(self):
         self._pre_train_lm()  # Get LM emb + pred
         self._pre_train_gnn()  # Get GNN pred (OGB)
+        
+        # torch.cuda.memory._record_memory_history(
+        #     max_entries=MAX_NUM_OF_MEM_EVENTS_PER_SNAPSHOT
+        # )
+        
         for self.em_iter in self.em_range:
             if self.cf.em_order == 'GNN-first':
                 self._maximization()
                 self._inference()
-            else:  # LM-First
+            else:  # LM-First   ### default
                 self._inference()
                 self._maximization()
             if self.em_iter == (self.em_range.stop - 1):

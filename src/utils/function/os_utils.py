@@ -2,12 +2,12 @@ import errno
 import pickle
 import os
 
-
 def run_command_parallel(cmd, gpus, log_func=print):
     _ = cmd.split('python ')
     env_path, variables = _[0], _[1]
     # run 'which torchrun' and change this to to torchrun path
-    torchrun_path = "/home/hice1/rjain343/scratch/.conda/envs/GLEM-1/bin/"
+    # torchrun_path = "/home/hice1/rjain343/scratch/.conda/envs/GLEM-1/bin/"
+    torchrun_path = "/nethome/ksinha45/miniconda3/envs/ct/bin/"
     cmd = f'CUDA_VISIBLE_DEVICES={gpus} {torchrun_path}torchrun --master_port={find_free_port()} --nproc_per_node={len(gpus.split(","))} {variables}'
     run_command(cmd, log_func)
 

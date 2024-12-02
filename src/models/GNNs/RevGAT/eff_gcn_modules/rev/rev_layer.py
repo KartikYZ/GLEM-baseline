@@ -3,9 +3,15 @@ import torch.nn as nn
 import torch.nn.functional as F
 try:
     from torch_geometric.nn import GCNConv, SAGEConv, GATConv
-    from gcn_lib.sparse.torch_vertex import GENConv
-    from gcn_lib.sparse.torch_nn import norm_layer
-except:
+    # from gcn_lib.sparse.torch_vertex import GENConv
+    # from gcn_lib.sparse.torch_nn import norm_layer
+    
+    from ...gcn_lib.sparse.torch_vertex import GENConv
+    from ...gcn_lib.sparse.torch_nn import norm_layer
+    # manually add from sibling deep_gcns_torch repository
+    # from ........deep_gcns_torch.gcn_lib.sparse.torch_vertex import GENConv
+    # from ........deep_gcns_torch.gcn_lib.sparse.torch_nn import norm_layer
+except Exception as e:
     print("An import exception occurred")
 
 

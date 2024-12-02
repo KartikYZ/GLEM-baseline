@@ -12,10 +12,9 @@ def train_glem(args):
     cf = GLEMConfig(args).init()
     # ! Import packages
 
-    from models.GLEM.GLEM_trainer import GLEMTrainer
+    from models.GLEM.GLEM_trainer import GLEMTrainer    
     GLEMTrainer(cf).glem_train()
     return
-
 
 if __name__ == "__main__":
     args = GLEMConfig().parse_args()
