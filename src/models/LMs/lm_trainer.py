@@ -8,6 +8,8 @@ from models.GLEM.GLEM_utils import *
 from utils.data.datasets import *
 import torch as th
 
+from profile_latency import LatencyTrainer
+
 # these files don't exist, we can copy the hf code for them but that requires evaluate package which when pip installed breaks env :(
 METRICS = {  # metric -> metric_path
     'accuracy': 'src/utils/function/hf_accuracy.py',
@@ -135,15 +137,22 @@ class LMTrainer():
             if m_name in {'accuracy', 'pearsonr', 'spearmanr'} else metric.compute(predictions=predictions, references=references, average='macro')
             for m_name, metric in self.metrics.items()}
 
-
-
-        self.trainer = Trainer(
+        # self.trainer = Trainer(
+        #     model=self.model,
+        #     args=training_args,
+        #     train_dataset=self.train_data,
+        #     eval_dataset=self.datasets['valid'],
+        #     compute_metrics=compute_metrics,
+        # )
+        
+        self.trainer = LatencyTrainer(
             model=self.model,
             args=training_args,
             train_dataset=self.train_data,
             eval_dataset=self.datasets['valid'],
             compute_metrics=compute_metrics,
         )
+        
         self.eval_phase = 'Eval'
         self.trainer.train()
         # ! Save bert
