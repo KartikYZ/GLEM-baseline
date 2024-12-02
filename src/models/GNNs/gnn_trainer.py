@@ -9,11 +9,18 @@ from models.GNNs.gnn_utils import *
 from utils.data.datasets import *
 from utils.data.preprocess import *
 from utils.modules.early_stopper import EarlyStopping
-from time import time
+from time import time, perf_counter
 
 from profile_latency import timer
+import logging
 
-LOG_FREQ = 10
+LOG_DIR='/scratch/ns_ksinha45/graphllms/GLEM-baseline/logs'
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.FileHandler(f'{LOG_DIR}/gnn_trainer_latency.log'))
+
+LOG_FREQ = 1
 
 class GNNTrainer():
     def __init__(self, cf: GNNConfig):
@@ -77,6 +84,9 @@ class GNNTrainer():
     @timer
     def _train(self):
         # ! Shared
+        
+        start_time = perf_counter()
+        
         self.model.train()
         self.optimizer.zero_grad()
         # ! Specific
@@ -92,6 +102,12 @@ class GNNTrainer():
 
         loss.backward()
         self.optimizer.step()
+        
+        end_time = perf_counter()
+        run_time = end_time - start_time
+        print(f"Function _train took {run_time:.4f} seconds to complete")
+        logger.debug(f"Function _train took {run_time:.4f} seconds to complete")
+        
         return loss.item(), train_acc
 
     @th.no_grad()
@@ -119,6 +135,7 @@ class GNNTrainer():
                     break
             log_dict = {'Epoch': epoch, 'Time': time() - t0, 'Loss': loss, 'TrainAcc': train_acc, 'ValAcc': val_acc,
                         'ES': es_str, 'GNN_epoch': epoch}
+            logger.debug(log_dict)
             wandb_dict = {f'{self.wandb_prefix}{k}': v for k, v in log_dict.items() if type(v) in [float, int]}
             wandb_dict.update({f'Step': epoch})
             self.logger.dynamic_log(log_dict, 1 if epoch % LOG_FREQ == 0 else 2, wandb_dict)

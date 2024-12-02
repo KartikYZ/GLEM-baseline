@@ -5,8 +5,9 @@ import logging
 
 LOG_DIR='/scratch/ns_ksinha45/graphllms/GLEM-baseline/logs'
 
-logging.basicConfig(level=logging.DEBUG, filename=f'{LOG_DIR}/gnn_latency.log')
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.FileHandler(f'{LOG_DIR}/gnn_latency.log'))
 
 LOG = True
 
@@ -20,6 +21,7 @@ def timer(func):
         result = func(*args, **kwargs)
         end_time = time.perf_counter()
         run_time = end_time - start_time
+        # breakpoint()
         # if LOG:
         #     logger.debug(f"Function {func.__name__!r} took {run_time:.4f} seconds to complete")
         logger.debug(f"Function {func.__name__!r} took {run_time:.4f} seconds to complete")

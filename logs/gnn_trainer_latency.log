@@ -1,0 +1,21 @@
+Function _train took 3.5694 seconds to complete
+Function _train took 2.5136 seconds to complete
+Function _train took 2.5834 seconds to complete
+Function _train took 3.7002 seconds to complete
+{'Epoch': 0, 'Time': 3.858858823776245, 'Loss': 8.247421264648438, 'TrainAcc': 0.021105094394217653, 'ValAcc': 0.006074029329843284, 'ES': '00/300 | BestVal=0.0061@E0', 'GNN_epoch': 0}
+Function _train took 2.4899 seconds to complete
+{'Epoch': 1, 'Time': 2.647737741470337, 'Loss': 8.21753215789795, 'TrainAcc': 0.0215243617982438, 'ValAcc': 0.034095103862545724, 'ES': '00/300 | BestVal=0.0341@E1', 'GNN_epoch': 1}
+Function _train took 2.5524 seconds to complete
+{'Epoch': 2, 'Time': 2.7092816829681396, 'Loss': 7.032435894012451, 'TrainAcc': 0.051262821610577346, 'ValAcc': 0.5170643310178193, 'ES': '00/300 | BestVal=0.5171@E2', 'GNN_epoch': 2}
+Function _train took 2.5582 seconds to complete
+{'Epoch': 3, 'Time': 2.714613437652588, 'Loss': 5.423150062561035, 'TrainAcc': 0.17158666139137727, 'ValAcc': 0.655592469545958, 'ES': '00/300 | BestVal=0.6556@E3', 'GNN_epoch': 3}
+Function _train took 2.4943 seconds to complete
+{'Epoch': 4, 'Time': 2.6516404151916504, 'Loss': 4.040279865264893, 'TrainAcc': 0.3434803918673934, 'ValAcc': 0.694654183026276, 'ES': '00/300 | BestVal=0.6947@E4', 'GNN_epoch': 4}
+Function _train took 2.5665 seconds to complete
+{'Epoch': 5, 'Time': 2.724447727203369, 'Loss': 3.109482765197754, 'TrainAcc': 0.46115280820583077, 'ValAcc': 0.7193529984227659, 'ES': '00/300 | BestVal=0.7194@E5', 'GNN_epoch': 5}
+Function _train took 2.5508 seconds to complete
+{'Epoch': 6, 'Time': 2.7086455821990967, 'Loss': 2.511025905609131, 'TrainAcc': 0.5472443502241013, 'ValAcc': 0.7369374811235276, 'ES': '00/300 | BestVal=0.7369@E6', 'GNN_epoch': 6}
+Function _train took 2.5675 seconds to complete
+{'Epoch': 7, 'Time': 2.725022554397583, 'Loss': 2.1160988807678223, 'TrainAcc': 0.6061779937759458, 'ValAcc': 0.747843887378771, 'ES': '00/300 | BestVal=0.7478@E7', 'GNN_epoch': 7}
+Function _train took 2.5577 seconds to complete
+{'Epoch': 8, 'Time': 2.715557098388672, 'Loss': 1.8507752418518066, 'TrainAcc': 0.6523682703152773, 'ValAcc': 0.7540521494009866, 'ES': '00/300 | BestVal=0.7541@E8', 'GNN_epoch': 8}

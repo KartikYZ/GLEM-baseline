@@ -12,11 +12,11 @@ from utils.data.preprocess import *
 
 LOG_FREQ = 1
 
-from profile_latency import timer
-import logging
+# from profile_latency import timer
+# import logging
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, filename=f'./logs/gnn_latency.log')
+# logger = logging.getLogger(__name__)
+# logging.basicConfig(level=logging.DEBUG, filename=f'./logs/gnn_latency.log')
 
 class BatchGNNTrainer():
     def __init__(self, cf: GNNConfig):
@@ -101,7 +101,7 @@ class BatchGNNTrainer():
 
         for step, (input_nodes, seeds, blocks) in enumerate(dataloader):
             
-            start_time = time.perf_counter()
+            # start_time = time.perf_counter()
             
             # copy block to gpu
             blocks = [blk.int().to(self.cf.device) for blk in blocks]
@@ -127,10 +127,11 @@ class BatchGNNTrainer():
                 last_loss.append(loss.item())
                 last_train_acc.append(train_acc)
                 
-            end_time = time.perf_counter()
-            run_time = end_time - start_time
-            print(f"Function _train took {run_time:.4f} seconds to complete")
-            logger.debug(f"Function _train took {run_time:.4f} seconds to complete")
+            # end_time = time.perf_counter()
+            # run_time = end_time - start_time
+            # breakpoint()
+            # print(f"Function _train took {run_time:.4f} seconds to complete")
+            # logger.debug(f"Function _train took {run_time:.4f} seconds to complete")
 
         return np.mean(last_loss), np.mean(last_train_acc)
 
